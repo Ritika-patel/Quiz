@@ -1,106 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext } from "react";
+import QuizContext from "../context/quiz/quizContext";
+import QuizResultScreen from "./QuizResultScreen";
 
 const QuizAttemptScreen = () => {
-  const [questions, setQuestions] = useState([
-    {
-      id: 1,
-      question: 'What is the function used to lookup a value in a table and return a corresponding value from the same row?',
-      options: ['MATCH', 'INDEX', 'HLOOKUP', 'VLOOKUP'],
-      answer: 'VLOOKUP',
-    },
-    {
-      id: 2,
-      question: 'What is the function used to lookup a value in a table and return a corresponding value from the same row?',
-      options: ['MATCH', 'INDEX', 'HLOOKUP', 'VLOOKUP'],
-      answer: 'VLOOKUP',
-    },
-    {
-      id: 3,
-      question: 'What is the function used to lookup a value in a table and return a corresponding value from the same row?',
-      options: ['MATCH', 'INDEX', 'HLOOKUP', 'VLOOKUP'],
-      answer: 'VLOOKUP',
-    },
-    {
-      id: 4,
-      question: 'What is the function used to lookup a value in a table and return a corresponding value from the same row?',
-      options: ['MATCH', 'INDEX', 'HLOOKUP', 'VLOOKUP'],
-      answer: 'VLOOKUP',
-    },
-    {
-      id: 5,
-      question: 'What is the function used to lookup a value in a table and return a corresponding value from the same row?',
-      options: ['MATCH', 'INDEX', 'HLOOKUP', 'VLOOKUP'],
-      answer: 'VLOOKUP',
-    },
-    // add more questions
-  ]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState('');
-  const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(15);
-  let navigate = useNavigate();
+  const {
+    showResult,
+    selectedOption,
+    currentQuestionIndex,
+    questions,
+    handleNextQuestion,
+    handleOptionChange,
+    submitQuiz,
+    minutesLeft,
+    secondsLeft
+  } = useContext(QuizContext);
 
 
-  useEffect(() => {
-    if (timeLeft === 0) {
-      submitQuiz();
-    } else {
-      const timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [timeLeft]);
-
-
-  const handleOptionChange = (option) => {
-    setSelectedOption(option);
-  };
-
-  const handleNextQuestion = () => {
-    const isCorrect = selectedOption === questions[currentQuestionIndex].answer;
-    if (isCorrect) {
-      setScore((prevScore) => prevScore + 1);
-    }
-
-    const nextQuestionIndex = currentQuestionIndex + 1;
-    if (nextQuestionIndex < questions.length) {
-      setCurrentQuestionIndex(nextQuestionIndex);
-      setSelectedOption('');
-    } else {
-      submitQuiz();
-    }
-  };
-
-  const submitQuiz = () => {
-    navigate('/result');
-  };
-
-  return (
-    <div className='screen'>
-      <h1>Quiz Attempt Screen</h1>
-      <p>{score}</p>
-      <p>{currentQuestionIndex+1}</p>
-      <p>{questions[currentQuestionIndex].question}</p>
-      <div>
-        {questions[currentQuestionIndex].options.map((option, index) => (
-          <div key={index}>
-            <input
-              type="radio"
-              name="option"
-              value={option}
-              checked={selectedOption === option}
-              onChange={() => handleOptionChange(option)}
-            />
-            {option}
+  if (showResult === false) {
+    return (
+      <div className="screen2">
+        <div className="timmer">
+          <div className="q_no">
+            <p>
+              {currentQuestionIndex + 1} / {questions.length}
+            </p>
           </div>
-        ))}
+          <div className="time_left">
+            <p>{minutesLeft}:{secondsLeft < 10 ? `0${secondsLeft}` : secondsLeft}</p>
+          </div>
+        </div>
+
+
+        <p className="question">{questions[currentQuestionIndex].question}</p>
+        <div>
+          {questions[currentQuestionIndex].options.map((option, index) => (
+            <div className="opt" key={index}>
+              <div className="flex">
+                <div className="flex">
+                  <p className="options">{option}</p>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    name="option"
+                    value={option}
+                    checked={selectedOption === option}
+                    onChange={() => handleOptionChange(option)}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {currentQuestionIndex + 1 < questions.length ? (
+          <button className="nextBtn" onClick={handleNextQuestion}>
+            Next
+          </button>
+        ) : (
+          <button className="submitBtn" onClick={submitQuiz}>
+            Submit Quiz
+          </button>
+        )}
       </div>
-      <p>{timeLeft}</p>
-      <button onClick={handleNextQuestion}>Next</button>
-    </div>
-  );
+    );
+  } else {
+    return <QuizResultScreen />;
+  }
 };
 
 export default QuizAttemptScreen;
