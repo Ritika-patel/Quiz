@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from 'react-router-dom';
 import QuizContext from "../context/quiz/quizContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faShareNodes } from "@fortawesome/free-solid-svg-icons";
 
 

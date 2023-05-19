@@ -27,8 +27,6 @@ p {
   background-color: #ffff;
   width: 10cm;
   margin: auto;
-  overflow: hidden;
-  scroll-behavior: none;
 }
 
 .dark {
