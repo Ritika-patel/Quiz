@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { Link } from 'react-router-dom';
 import QuizContext from "../context/quiz/quizContext";
 import { faArrowLeft, faShareNodes } from "@fortawesome/free-solid-svg-icons";
-import { faShareNodes } from '@fortawesome/free-solid-svg-icons';
 
 
 const QuizResultScreen = () => {
